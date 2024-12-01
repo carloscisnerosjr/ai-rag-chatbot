@@ -46,7 +46,7 @@ Navigate to http://localhost:3000. Ask the chatbot it knows your favorite food. 
 
 How can we integrate a knowledge base that the chatbot can use?
 
-# Verify database is empty
+## Verify database is empty
 
 Navigate to https://local.drizzle.studio in your browser to view the database. Notice that the embeddings table is empty. The bot does not have any knowledge of your favorite food!
 
