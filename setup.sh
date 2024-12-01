@@ -59,3 +59,7 @@ docker compose up -d
 echo "Running database migrations..."
 pnpm db:migrate
 pnpm db:push
+
+# Start the server
+echo "Starting the server..."
+pnpm run dev
