@@ -60,6 +60,6 @@ Ask the bot your favorite food again. It should now know the answer! Congrats, y
 
 - Run `pnpm stop` to stop the server. 
 - Run `pnpm db:studio:stop` to stop the database studio. 
-- - Run `docker compose down -v --rmi all` to remove the Docker container.
+- Run `docker compose down -v --rmi all` to remove the Docker container.
 - Remove your API key from the `.env` file.
 
