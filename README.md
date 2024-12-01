@@ -1,6 +1,6 @@
-# Vercel AI SDK RAG Guide Starter Project
+# AI RAG Chatbot Guide
 
-This is the starter project for the Vercel AI SDK [Retrieval-Augmented Generation (RAG) guide](https://sdk.vercel.ai/docs/guides/rag-chatbot).
+This is based on the starter project for the Vercel AI SDK [Retrieval-Augmented Generation (RAG) guide](https://sdk.vercel.ai/docs/guides/rag-chatbot). I have edited parts of the stack for an easier setup. Choose the script based on your OS below. MacOS and Windows are currently supported.
 
 ## Stack
 
@@ -13,11 +13,11 @@ This is the starter project for the Vercel AI SDK [Retrieval-Augmented Generatio
 
 ## Prerequisites
 
-- Docker
+Be sure to have an OpenAI API key and Git installed.
 - OpenAI API Key
-- Node.js
+- Git 
 
-## Clone the Repository
+## Clone the Repository and create .env file
 
 `git clone https://github.com/carloscisnerosjr/ai-rag-chatbot`
 
@@ -25,20 +25,30 @@ Rename `.env.example` to `.env` and add your OpenAI API key. Keep the database U
 
 ## Run the Setup Script
 
-Download the setup script based on your OS. Save it in the root of the repository.
+Run the setup script at the root of the repository based on your OS.
 
-- [Bash](./scripts/setup.sh)
-- [PowerShell](./scripts/setup.ps1)
+MacOS
 
-Run the script and the server will start automatically after the script finishes. Navigate to http://localhost:3000 to view the chatbot.
+- In Terminal, run `bash setup.sh`.
 
-> Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force` on Windows to allow the script to run.        
+> You may need to accept incoming networking connections on a Mac when running the script.
+
+Windows
+
+- Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass -Force` on Windows to allow the script to run.   
+- In Powershell, run `./setup.ps1`.
+
+The server and database will start automatically after the script finishes. Navigate to http://localhost:3000 to view the chatbot and to https://local.drizzle.studio to view the database. 
 
 ## Chat with the Bot and verify empty knowledge base
 
-Ask if it knows your favorite food. It will not know the answer. Is the information stored in the database? Let's find out.
+Navigate to http://localhost:3000. Ask the chatbot it knows your favorite food. It will not know the answer because it is not trained on that data!
 
-Run `pnpm db:studio` to view the database. Navigate to local.drizzle.studio in your browser to view the database. Notice that the embeddings table is empty. The bot does not have any knowledge of your favorite food!
+How can we integrate a knowledge base that the chatbot can use?
+
+# Verify database is empty
+
+Navigate to https://local.drizzle.studio in your browser to view the database. Notice that the embeddings table is empty. The bot does not have any knowledge of your favorite food!
 
 ## Add to the bot's knowledge base
 

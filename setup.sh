@@ -1,65 +1,66 @@
 #!/bin/bash
 
-# Check if Docker is installed
+print_separator() {
+    echo -e "\n----------------------------------------"
+    echo "🚀 $1"
+    echo -e "----------------------------------------\n"
+    sleep 1
+}
+
+# Check Docker and Colima
+print_separator "Checking Docker Installation"
 if ! command -v docker &> /dev/null; then
-    echo "Docker is not installed. Installing Docker..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # Install Docker Desktop on macOS
-        if ! command -v brew &> /dev/null; then
-            echo "Homebrew is not installed. Please install Homebrew first and rerun this script."
-            exit 1
-        fi
-        brew install --cask docker
-        echo "Starting Docker Desktop..."
-        # Launch Docker Desktop and minimize using AppleScript
-        open /Applications/Docker.app
-        osascript -e 'tell application "Docker" to set miniaturized of every window to true'
-        echo "Waiting for Docker daemon to start..."
-        while ! docker info &> /dev/null; do
-            sleep 2
-        done
-        echo "Docker is ready."
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # Install Docker on Linux
-        curl -fsSL https://get.docker.com | sh
-        sudo systemctl start docker
-        sudo systemctl enable docker
-        echo "Docker installed and started."
-    else
-        echo "Unsupported OS. Please install Docker manually and rerun this script."
-        exit 1
-    fi
-else
-    echo "Docker is already installed."
+    echo "Installing Docker CLI..."
+    brew install docker
 fi
 
-# Install pnpm if not installed
-if ! command -v pnpm &> /dev/null; then
-    echo "pnpm is not installed. Installing pnpm..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        brew install pnpm
-    else
-        curl -fsSL https://get.pnpm.io/install.sh | sh -
-    fi
-else
-    echo "pnpm is already installed."
+print_separator "Checking Colima Installation"
+if ! command -v colima &> /dev/null; then
+    echo "Installing Colima..."
+    brew install colima
 fi
 
-# Install dependencies
-echo "Installing dependencies with pnpm..."
-pnpm install
-pnpm add @vercel/postgres openai drizzle-orm ai
+print_separator "Starting Docker Runtime"
+if ! colima status &> /dev/null; then
+    echo "Starting Colima..."
+    colima start
+    echo "Waiting for Docker daemon to start..."
+    while ! docker info &> /dev/null; do
+        sleep 2
+    done
+    echo "Docker is ready!"
+fi
 
-# Setup database
-echo "Setting up the database with Docker..."
+print_separator "Setting Up Database"
 docker pull supabase/postgres:15.6.1.143
-docker compose up -d
+docker-compose up --detach
+sleep 3
 
-# Run migrations
-echo "Running database migrations..."
+print_separator "Running Database Migrations"
 pnpm db:migrate
 pnpm db:push
+sleep 2
 
-# Start the server
-echo "Starting the server..."
-pnpm run dev
+print_separator "Starting Development Server"
+nohup pnpm run dev > server.log 2>&1 &
+sleep 3
+
+print_separator "Starting Database Studio"
+nohup pnpm db:studio > dbstudio.log 2>&1 &
+sleep 3
+
+print_separator "🎉 Setup Complete!"
+echo "Access your services at:"
+echo "- Server: http://localhost:3000"
+echo "- Database Studio: https://local.drizzle.studio"
+sleep 1
+
+echo -e "\nView logs with:"
+echo "- Server logs: tail -f server.log"
+echo "- DB Studio logs: tail -f dbstudio.log"
+sleep 1
+
+echo -e "\nTo stop services later:"
+echo "pkill -f 'pnpm run dev'"
+echo "pkill -f 'pnpm db:studio'"
+echo -e "----------------------------------------\n"
