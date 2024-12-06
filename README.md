@@ -13,13 +13,16 @@ This is based on the starter project for the Vercel AI SDK [Retrieval-Augmented 
 
 ## Prerequisites
 
-Be sure to have an OpenAI API key and Git installed.
+Be sure to have an OpenAI API key, Git and pnpm installed.
 - OpenAI API Key
 - Git 
+- pnpm (`brew install pnpm`)
 
-## Clone the Repository and create .env file
+## Clone the Repository, install dependencies and create .env file
 
 `git clone https://github.com/carloscisnerosjr/ai-rag-chatbot`
+
+`pnpm install`
 
 Rename `.env.example` to `.env` and add your OpenAI API key. Keep the database URL as is.
 
